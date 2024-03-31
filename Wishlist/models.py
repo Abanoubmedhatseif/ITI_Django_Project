@@ -1,10 +1,10 @@
 from django.db import models
-from User.models import User
+from User.models import CustomUser
 from Product.models import Product
 
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
 
     def __str__(self):
