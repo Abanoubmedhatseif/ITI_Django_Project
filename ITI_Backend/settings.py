@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+dotenv_path = Path(__file__).resolve().parent.parent / 'dot.env'
 
-load_dotenv()
+load_dotenv(dotenv_path)
+BASE_DIR = Path(__file__).resolve().parent.parent
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -49,7 +51,7 @@ INSTALLED_APPS = [
     'Wishlist',
     
 ]
-
+AUTH_USER_MODEL = 'User.CustomUser'
 REST_FRAMEWORK={}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
