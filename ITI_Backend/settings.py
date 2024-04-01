@@ -16,6 +16,7 @@ import os
 dotenv_path = Path(__file__).resolve().parent.parent / 'dot.env'
 
 load_dotenv(dotenv_path)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,10 +50,16 @@ INSTALLED_APPS = [
     'Cart',
     'Orders',
     'Wishlist',
+    'rest_framework.authtoken'
     
 ]
 AUTH_USER_MODEL = 'User.CustomUser'
-REST_FRAMEWORK={}
+REST_FRAMEWORK={
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -140,3 +147,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ 
+MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
+MEDIA_URL = '/media/'

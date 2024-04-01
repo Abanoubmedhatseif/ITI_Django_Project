@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, EmailValidator, MinLengthValidator
 
+def upload_to(instance, filename):
+    return 'profilePhoto/{filename}'.format(filename=filename)
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=20, unique=True, validators=[
         RegexValidator(
@@ -24,7 +26,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, validators=[
         EmailValidator(message='Invalid email format.')
     ])
-    password = models.CharField(max_length=50 ,validators=[
+    password = models.CharField(max_length=255 ,validators=[
         RegexValidator(
             regex='^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[0-9a-zA-Z!@#$%^&*()_+]{8,}$',
             message='Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character.',
@@ -32,7 +34,7 @@ class CustomUser(AbstractUser):
         ),
         ])
     shipping_address = models.CharField(max_length=100, blank=True)
-    profile_photo = models.ImageField(upload_to='profile_photos', null=True, blank=True)
+    profile_photo = models.ImageField(upload_to=upload_to, null=True, blank=True)
     def __str__(self):
         return self.username
 
