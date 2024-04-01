@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser
 
-class UserSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username','first_name','last_name','password','email','shipping_address','profile_photo']
@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         photo = validated_data.pop('profile_photo', None)
-        user = CustomUser(
+        user = CustomUser.objects.create(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
@@ -22,3 +22,4 @@ class UserSerializer(serializers.ModelSerializer):
             user.profile_photo = photo
         user.save()
         return user
+    
