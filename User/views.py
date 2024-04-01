@@ -6,6 +6,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from .models import CustomUser
+
+
 @api_view(['POST'])
 def register(request):
     if request.method == 'POST':

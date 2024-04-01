@@ -20,6 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         if photo:
             user.profile_photo = photo
+            
         user.save()
         return user
     
