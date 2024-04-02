@@ -5,6 +5,7 @@ from rest_framework.decorators import (
 )
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
+
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from Product.models import Product
@@ -12,7 +13,7 @@ from Product.models import Product
 
 @api_view(["GET", "POST", "PUT", "DELETE"])
 @authentication_classes([SessionAuthentication])
-# @permission_classes([IsAuthenticated])     
+# @permission_classes([IsAuthenticated])
 def cart(request):
     if request.method == "GET":
 
@@ -33,9 +34,9 @@ def cart(request):
             "id": product.id,
             "name": product.name,
             "description": product.description,
-            "price": str(product.price),  
-            # "image_url": product.image.url,  
-            "category_id": product.category_id,  
+            "price": str(product.price),
+            # "image_url": product.image.url,
+            "category_id": product.category_id,
             "active": product.active,
             "stock": product.stock,
         }
@@ -64,7 +65,3 @@ def cart(request):
             return Response(
                 {"error": "Item not found in cart"}, status=status.HTTP_404_NOT_FOUND
             )
-
-
-        
-    
