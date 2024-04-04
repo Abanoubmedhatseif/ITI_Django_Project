@@ -21,6 +21,8 @@ def register(request):
 @api_view(['POST'])
 def login(request):
     if request.method == 'POST':
+        if not request.data:
+                return Response({'error': 'Request body is empty'}, status=status.HTTP_400_BAD_REQUEST)
         username = request.data.get('username')
         password = request.data.get('password')
 
