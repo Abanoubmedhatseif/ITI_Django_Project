@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "corsheaders",
     "User",
     "Product",
     "Categories",
@@ -55,17 +56,19 @@ INSTALLED_APPS = [
     "Wishlist",
     "rest_framework.authtoken",
 ]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+
 AUTH_USER_MODEL = "User.CustomUser"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        'rest_framework.authentication.BasicAuthentication',
-        
+        "rest_framework.authentication.BasicAuthentication",
     ],
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -73,9 +76,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "ITI_Backend.urls"
+
 
 TEMPLATES = [
     {
@@ -149,6 +154,16 @@ STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:5175"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # SESSION_ENGINE = 'django.contrib.sessions.backends.db'   
