@@ -3,30 +3,20 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from Product.models import Product
-from Categories.models import Category  
 from Product.serializers import ProductSerializer
 from Categories.serializers import CategorySerializer  
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
 
 @api_view(['GET'])
-def product_and_category_list(request):
+def product_list(request):
     paginator = PageNumberPagination()
     paginator.page_size = 10
     products = Product.objects.all()
-    categories = Category.objects.all()
     
     result_page = paginator.paginate_queryset(products, request)
     product_serializer = ProductSerializer(result_page, many=True)
-    
-    result_page = paginator.paginate_queryset(categories, request)
-    category_serializer = CategorySerializer(result_page, many=True)
-
-    data = {
-        'products': product_serializer.data,
-        'categories': category_serializer.data
-    }
-    return paginator.get_paginated_response(data)
+    return paginator.get_paginated_response(product_serializer.data)
 
 @api_view(['GET'])
 def product_search(request):
