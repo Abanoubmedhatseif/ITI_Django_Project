@@ -14,6 +14,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 from decouple import config
+import stripe
+from django.conf import settings
 
 dotenv_path = Path(__file__).resolve().parent.parent / "dot.env"
 
@@ -168,3 +170,7 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:5175", "http://127.0.0.1:5175"]
 # Stripe
 STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY")
 STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY")
+BACKEND_DOMAIN = config("BACKEND_DOMAIN")
+PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
+PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
+stripe.api_key = settings.STRIPE_SECRET_KEY
