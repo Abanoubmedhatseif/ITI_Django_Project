@@ -54,13 +54,14 @@ INSTALLED_APPS = [
     "Wishlist",
     "rest_framework.authtoken",
 ]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+
 AUTH_USER_MODEL = "User.CustomUser"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        'rest_framework.authentication.BasicAuthentication',
-        
+        "rest_framework.authentication.BasicAuthentication",
     ],
 }
 
@@ -73,9 +74,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "ITI_Backend.urls"
+
 
 TEMPLATES = [
     {
@@ -151,7 +154,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-# SESSION_ENGINE = 'django.contrib.sessions.backends.db'   
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
