@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from decouple import config
 
 dotenv_path = Path(__file__).resolve().parent.parent / "dot.env"
 
@@ -152,3 +153,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # SESSION_ENGINE = 'django.contrib.sessions.backends.db'   
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+# Stripe
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+
