@@ -7,7 +7,6 @@ from Product.serializers import ProductSerializer
 from Categories.serializers import CategorySerializer  
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
-# from Category.models import Category
 
 @api_view(['GET'])
 def product_list(request):
