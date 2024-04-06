@@ -14,8 +14,9 @@ from Product.serializers import ProductSerializer
 
 
 @authentication_classes([SessionAuthentication])
-# @permission_classes([IsAuthenticated])
-def cart(request):
+@permission_classes([IsAuthenticated])
+@api_view(["GET", "POST"])
+def cartAPI(request):
     if request.method == "GET":
         cart = Cart(request)
         cart_data = list(cart.__iter__())
