@@ -11,20 +11,25 @@ from rest_framework import status
 from .service import Cart
 from Product.models import Product
 from Product.serializers import ProductSerializer
+from django.http import JsonResponse
+
+from django.conf import settings
 
 
 @authentication_classes([SessionAuthentication])
-@permission_classes([IsAuthenticated])
 @api_view(["GET", "POST"])
 def cartAPI(request):
+    session_id = request.session.session_key
     if request.method == "GET":
         cart = Cart(request)
         cart_data = list(cart.__iter__())
         cart_total_price = cart.get_total_price()
-        return Response(
-            {"data": cart_data, "cart_total_price": cart_total_price},
-            status=status.HTTP_200_OK,
-        )
+        response_data = {
+            "data": cart_data,
+            "cart_total_price": cart_total_price,
+            "session_id": session_id,  # Include session ID in the response
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 
     elif request.method == "POST":
         cart = Cart(request)
@@ -51,4 +56,12 @@ def cartAPI(request):
                 overide_quantity=request.data.get("overide_quantity", False),
             )
 
-        return Response({"message": "cart updated"}, status=status.HTTP_202_ACCEPTED)
+        # Return session ID along with the response
+        return JsonResponse(
+            {
+                "message": "cart updated",
+                "product": ProductSerializer(product).data,
+                "session_id": session_id,
+            },
+            status=status.HTTP_202_ACCEPTED,
+        )
