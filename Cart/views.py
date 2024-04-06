@@ -7,51 +7,47 @@ from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from ..Product.models import Product
+from .service import Cart
+from Product.models import Product
+from Product.serializers import ProductSerializer
 
 
-@api_view(["GET", "POST", "PUT", "DELETE"])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
-def cart(request):
+@api_view(["GET", "POST"])
+def cartAPI(request):
     if request.method == "GET":
-
-        cart_data = request.session.get("cart", {})
-        return Response(cart_data)
+        cart = Cart(request)
+        cart_data = list(cart.__iter__())
+        cart_total_price = cart.get_total_price()
+        return Response(
+            {"data": cart_data, "cart_total_price": cart_total_price},
+            status=status.HTTP_200_OK,
+        )
 
     elif request.method == "POST":
-        product_id = request.data.get("product_id")
+        cart = Cart(request)
 
-        try:
-            product = Product.objects.get(pk=product_id)
-        except Product.DoesNotExist:
-            return Response(
-                {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-        cart_data = product
+        if "remove" in request.data:
+            product = request.data["product"]
+            cart.remove(product)
 
-        cart_session = request.session.get("cart", {})
-        cart_session.update({product_id: cart_data})
-        request.session["cart"] = cart_session
+        elif "clear" in request.data:
+            cart.clear()
 
-        return Response(cart_session, status=status.HTTP_201_CREATED)
-
-    elif request.method == "PUT":
-
-        cart_data = request.session.get("cart", {})
-        updated_item = request.data
-        cart_data.update(updated_item)
-        request.session["cart"] = cart_data
-        return Response(cart_data)
-
-    elif request.method == "DELETE":
-        cart_data = request.session.get("cart", {})
-        item_to_remove = request.data.get("item_id")
-        if item_to_remove in cart_data:
-            del cart_data[item_to_remove]
-            request.session["cart"] = cart_data
-            return Response(cart_data, status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response(
-                {"error": "Item not found in cart"}, status=status.HTTP_404_NOT_FOUND
+            product_id = request.data.get("product_id")
+            try:
+                product = Product.objects.get(pk=product_id)
+            except Product.DoesNotExist:
+                return Response(
+                    {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND
+                )
+
+            cart.add(
+                product=ProductSerializer(product).data,
+                quantity=request.data.get("quantity", 1),
+                overide_quantity=request.data.get("overide_quantity", False),
             )
+
+        return Response({"message": "cart updated"}, status=status.HTTP_202_ACCEPTED)
