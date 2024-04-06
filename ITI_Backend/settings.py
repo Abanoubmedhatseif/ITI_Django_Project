@@ -157,8 +157,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
-
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ALLOWED_ORIGINS = ["http://localhost:5175"]
+CART_SESSION_ID = "cart"
