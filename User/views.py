@@ -1,16 +1,16 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import RegisterSerializer
+from .serializers import LoginSerializer, RegisterSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from .models import CustomUser
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -18,14 +18,24 @@ def register(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def login(request):
-    if request.method == 'POST':
-        username = request.data.get('username')
-        password = request.data.get('password')
+    if request.method == "POST":
+        if not request.data:
+            return Response(
+                {"error": "Request body is empty"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        if not request.data:
+            return Response(
+                {"error": "Request body is empty"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data.get("username")
+            password = serializer.validated_data.get("password")
         user = None
-        if '@' in username:
+        if "@" in username:
             try:
                 user = CustomUser.objects.get(email=username)
             except ObjectDoesNotExist:
@@ -36,6 +46,9 @@ def login(request):
 
         if user:
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+            return Response({"token": token.key}, status=status.HTTP_200_OK)
 
-        return Response({'error': 'username or password is wrong, please try agian'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"error": "username or password is wrong, please try agian"},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
