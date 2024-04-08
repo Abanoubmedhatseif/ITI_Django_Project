@@ -54,15 +54,28 @@ def login(request):
         )
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+def get_profile(request):
+    username = request.user
+
+    try:
+        user = CustomUser.objects.get(username=username)
+    except CustomUser.DoesNotExist:
+        return Response({"error": "No account was found with the provided username."}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = RegisterSerializer(user)
+    return Response(serializer.data)
+
+
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 def update_profile(request):
     user = request.user
 
-    update_fields = {
-        key: value for key, value in request.data.items() if key != "password"
-    }
+    update_fields = {key: value for key, value in request.data.items()}
     if not update_fields:
         return Response(
             {"error": "No valid fields provided for update"},
