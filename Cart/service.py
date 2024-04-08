@@ -12,10 +12,10 @@ class Cart:
         initialize the cart
         """
         self.session = request.session
-        cart = self.session.get(settings.CART_SESSION_ID)
-        if not cart:
+        cart = self.session.get("session_key")
+        if "session_key" not in request.session:
             # save an empty cart in session
-            cart = self.session[settings.CART_SESSION_ID] = {}
+            cart = self.session["session_key"] = {}
         self.cart = cart
 
     def save(self):
