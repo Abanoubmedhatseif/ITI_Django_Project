@@ -6,7 +6,7 @@ from rest_framework.decorators import (
     authentication_classes,
 )
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import TokenAuthentication
 from .serializers import RegisterSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
@@ -56,7 +56,7 @@ def login(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([TokenAuthentication])
 def get_profile(request):
     username = request.user
 
@@ -71,7 +71,7 @@ def get_profile(request):
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([TokenAuthentication])
 def update_profile(request):
     user = request.user
 
