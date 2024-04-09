@@ -4,21 +4,20 @@ from rest_framework import status
 from django.db import transaction
 from .models import Order
 from .serializers import OrderSerializer
-from Product.models import Product
 from Cart.models import CartItem
 from rest_framework.request import Request  
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 import stripe
 from django.conf import settings
 from django.core.mail import send_mail
 
-cash_payment_classes = [SessionAuthentication, BasicAuthentication]
-card_payment_classes = [SessionAuthentication, BasicAuthentication]
+cash_payment_classes = [SessionAuthentication, TokenAuthentication]
+card_payment_classes = [SessionAuthentication, TokenAuthentication]
 default_payment_method = "cash"
 
 @api_view(['GET', 'POST'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def order_list(request):
     if request.method == 'GET':
@@ -37,6 +36,7 @@ def order_list(request):
 
 @api_view(["POST"])
 @authentication_classes(cash_payment_classes)
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def confirm_order(request: Request):
     try:
@@ -77,6 +77,7 @@ def confirm_order(request: Request):
 
 @api_view(["POST"])
 @authentication_classes(card_payment_classes)
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_checkout_session(request: Request):
     try:
@@ -117,7 +118,7 @@ def create_checkout_session(request: Request):
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def order_detail(request, pk):
     try:
