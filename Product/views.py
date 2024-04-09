@@ -38,3 +38,19 @@ def product_detail(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Product.DoesNotExist:
         return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def products_by_category(request, category_id):
+    products = Product.objects.filter(category_id=category_id)
+    
+    serialized_products = [{
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        # 'image': product.image, 
+        'category': product.category.name,
+        'active': product.active,
+        'stock': product.stock
+    } for product in products]
+    
+    return Response(serialized_products)
