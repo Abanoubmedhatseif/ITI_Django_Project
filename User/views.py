@@ -63,7 +63,10 @@ def get_profile(request):
     try:
         user = CustomUser.objects.get(username=username)
     except CustomUser.DoesNotExist:
-        return Response({"error": "No account was found with the provided username."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "No account was found with the provided username."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
     serializer = RegisterSerializer(user)
     return Response(serializer.data)
@@ -75,7 +78,7 @@ def get_profile(request):
 def update_profile(request):
     user = request.user
 
-    update_fields = {key: value for key, value in request.data.items()}
+    update_fields = {key: value for key, value in request.data.items() if key != "password"}
     if not update_fields:
         return Response(
             {"error": "No valid fields provided for update"},
