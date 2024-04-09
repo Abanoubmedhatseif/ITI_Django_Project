@@ -1,13 +1,19 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+    authentication_classes,
+)
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CartItem, Cart
 from .serializers import CartItemSerializer
 from Product.models import Product
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 
-@api_view(["GET", "POST", "DELETE"])
+@api_view(["GET", "POST", "DELETE", "PATCH"])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def cart(request):
     if request.method == "GET":
@@ -69,3 +75,23 @@ def cart(request):
             {"message": "Cart item deleted successfully"},
             status=status.HTTP_204_NO_CONTENT,
         )
+    elif request.method == "PATCH":
+        item_id = request.data.get("item_id")
+        quantity = request.data.get("quantity")
+        if not item_id or not quantity:
+            return Response(
+                {"error": "Item ID and quantity are required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            cart_item = CartItem.objects.get(pk=item_id, cart__user=request.user)
+        except CartItem.DoesNotExist:
+            return Response(
+                {"error": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        cart_item.quantity = quantity
+        cart_item.save()
+        serializer = CartItemSerializer(cart_item)
+        return Response(serializer.data, status=status.HTTP_200_OK)
