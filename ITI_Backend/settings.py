@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-
     "User",
     "Product",
     "Categories",
@@ -58,8 +57,6 @@ INSTALLED_APPS = [
     "Wishlist",
     "rest_framework.authtoken",
 ]
-
-
 
 
 AUTH_USER_MODEL = "User.CustomUser"
@@ -177,6 +174,6 @@ BACKEND_DOMAIN = config("BACKEND_DOMAIN")
 PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
 PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
 stripe.api_key = settings.STRIPE_SECRET_KEY
-=======
+
 CORS_ALLOWED_ORIGINS = ["http://localhost:5175"]
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
