@@ -35,7 +35,7 @@ SECRET_KEY = "django-insecure-yuh&y4g053-&x&hs9nw8j+rgzi^!&0-q=c8a=3+d#h-f8@)dxh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["iti-django-project-vsgz.onrender.com"]
 
 
 # Application definition
@@ -170,7 +170,7 @@ CART_SESSION_ID = "cart"
 CORS_ORIGIN_ALLOW_ALL = True
 
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:5175", "http://127.0.0.1:5175"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173","iti-django-project-vsgz.onrender.com"]
 
 # Stripe
 STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY")
@@ -180,5 +180,4 @@ PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
 PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:5175"]
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+
