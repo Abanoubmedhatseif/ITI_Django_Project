@@ -24,9 +24,16 @@ def register(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+
+
 @api_view(["POST"])
 def login(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         if not request.data:
             return Response(
                 {"error": "Request body is empty"}, status=status.HTTP_400_BAD_REQUEST
@@ -36,24 +43,21 @@ def login(request):
         if serializer.is_valid():
             username = serializer.validated_data.get("username")
             password = serializer.validated_data.get("password")
-        user = None
-        if "@" in username:
-            try:
-                user = CustomUser.objects.get(email=username)
-            except ObjectDoesNotExist:
-                pass
-
-        if not user:
             user = authenticate(username=username, password=password)
 
-        if user:
-            token, _ = Token.objects.get_or_create(user=user)
-            return Response({"token": token.key}, status=status.HTTP_200_OK)
-
-        return Response(
-            {"error": "username or password is wrong, please try agian"},
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
+            if user:
+                token, _ = Token.objects.get_or_create(user=user)
+                return Response({"token": token.key}, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"error": "Username or password is incorrect"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+        else:
+            return Response(
+                {"error": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 @api_view(["GET"])
@@ -80,7 +84,9 @@ def get_profile(request):
 def update_profile(request):
     user = request.user
 
-    update_fields = {key: value for key, value in request.data.items() if key != "password"}
+    update_fields = {
+        key: value for key, value in request.data.items() if key != "password"
+    }
     if not update_fields:
         return Response(
             {"error": "No valid fields provided for update"},
