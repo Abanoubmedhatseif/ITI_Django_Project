@@ -28,7 +28,7 @@ def product_search(request):
     serializer = ProductSerializer(products, many=True)
     if not products:
         return Response({'message': 'No products found matching the query'}, status=status.HTTP_404_NOT_FOUND)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({'results':serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def product_detail(request, pk):
