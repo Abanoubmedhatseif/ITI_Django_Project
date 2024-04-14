@@ -55,17 +55,5 @@ def product_detail(request, pk):
 def products_by_category(request, category_id):
     products = Product.objects.filter(category_id=category_id)
 
-    serialized_products = [
-        {
-            "name": product.name,
-            "description": product.description,
-            "price": product.price,
-            # 'image': product.image,
-            "category": product.category.name,
-            "active": product.active,
-            "stock": product.stock,
-        }
-        for product in products
-    ]
-
-    return Response(serialized_products)
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
