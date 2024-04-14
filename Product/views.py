@@ -68,4 +68,4 @@ def products_by_category(request, category_id):
         for product in products
     ]
 
-    return Response({"result": serialized_products})
+    return Response(serialized_products)
