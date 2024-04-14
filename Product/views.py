@@ -60,7 +60,7 @@ def products_by_category(request, category_id):
             "name": product.name,
             "description": product.description,
             "price": product.price,
-            "image": product.image,
+            # 'image': product.image,
             "category": product.category.name,
             "active": product.active,
             "stock": product.stock,
