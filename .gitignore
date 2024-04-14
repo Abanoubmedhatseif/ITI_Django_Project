@@ -1,0 +1,4 @@
+/env
+dot.env
+
+__pycache__
